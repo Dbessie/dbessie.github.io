@@ -22,11 +22,14 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError(error.message)
+      if (error.message.toLowerCase().includes('confirm')) {
+        setError('Please confirm your email first — check your inbox for a confirmation link from Supabase.')
+      } else {
+        setError(error.message)
+      }
       setLoading(false)
     } else {
-      router.push('/dashboard')
-      router.refresh()
+      window.location.href = '/dashboard'
     }
   }
 

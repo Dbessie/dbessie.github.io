@@ -1,18 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { TrendingUp } from 'lucide-react'
 
 export default function SignupPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,8 +34,8 @@ export default function SignupPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/dashboard')
-      router.refresh()
+      setDone(true)
+      setLoading(false)
     }
   }
 
@@ -50,6 +49,13 @@ export default function SignupPage() {
           </div>
         </div>
 
+        {done ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">Check your email</h1>
+            <p className="text-gray-500 text-sm mb-6">We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back to sign in.</p>
+            <Link href="/auth/login" className="text-blue-600 hover:underline text-sm font-medium">Go to sign in</Link>
+          </div>
+        ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Create account</h1>
           <p className="text-gray-500 mb-6 text-sm">Start tracking your investments</p>
@@ -111,6 +117,7 @@ export default function SignupPage() {
             </Link>
           </p>
         </div>
+        )}
       </div>
     </div>
   )
