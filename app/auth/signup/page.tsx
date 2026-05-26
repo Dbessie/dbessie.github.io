@@ -28,11 +28,13 @@ export default function SignupPage() {
 
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       setError(error.message)
       setLoading(false)
+    } else if (data.session) {
+      window.location.href = '/dashboard'
     } else {
       setDone(true)
       setLoading(false)
